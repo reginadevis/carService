@@ -1,5 +1,6 @@
 package com.casestudy.config;
 
+import io.github.resilience4j.common.circuitbreaker.configuration.CircuitBreakerConfigCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
@@ -23,9 +24,22 @@ public class SwaggerConfig {
     }
 
     @Bean
+    public CircuitBreakerConfigCustomizer someRemoteSvcCircuitBreaker() {
+        //https://resilience4j.readme.io/docs/circuitbreaker
+        return CircuitBreakerConfigCustomizer
+                .of("getCar", builder -> {
+                    builder.slidingWindowSize(5);
+                    builder.failureRateThreshold(3);
+                    builder.waitDurationInOpenState(Duration.ofSeconds(10));
+                    builder.slowCallDurationThreshold(Duration.ofSeconds(5));
+                    builder.slowCallRateThreshold(100);
+                    builder.permittedNumberOfCallsInHalfOpenState(2);
+                    builder.slidingWindowType(COUNT_BASED);
+                });
+    }
+
+    @Bean
     public RestTemplate getRestTemplate() {
         return new RestTemplate();
     }
-
-
 }

@@ -2,6 +2,7 @@ package com.casestudy.controller;
 
 import com.casestudy.dto.CarDto;
 import com.casestudy.service.CarService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.ObjectUtils;
@@ -19,19 +20,13 @@ public class CarController {
 
 	@GetMapping("/cars")
 	private List<CarDto> getAllCars() {
-		List<CarDto> cars = carService.getAllCars();
-		return cars;
+		return carService.getAllCars();
 	}
+
 
 	@GetMapping("/car/{id}")
 	private CarDto getCar(@PathVariable("id") Long id) {
-		CarDto car = carService.getCar(id);
-		System.out.println("Getting into the real carController");
-		if (ObjectUtils.isEmpty(car)) {
-			System.out.println("Car is empty");
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "car.notpresent");
-		}
-		return car;
+		return carService.getCar(id);
 	}
 
 	@DeleteMapping("/car/{id}")
@@ -41,12 +36,15 @@ public class CarController {
 
 	@PostMapping("/car")
 	private CarDto saveCar(@Valid @RequestBody CarDto carDto) {
-		System.out.println("Controoler : carDto :" + carDto.getModel().getManufacturer().getManufacturer_id());
 		return carService.mergeCar(carDto);
 	}
 
 	@PutMapping("/car")
 	private CarDto updateCar(@Valid @RequestBody CarDto carDto) {
 		return carService.mergeCar(carDto);
+	}
+
+	public String getCarFail(@PathVariable("id") Long id){
+		return "Car Service failed to return details for ID : "+id;
 	}
 }

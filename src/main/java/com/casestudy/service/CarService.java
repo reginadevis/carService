@@ -5,6 +5,7 @@ import com.casestudy.entity.Car;
 import com.casestudy.mapper.CarMapper;
 import com.casestudy.repository.CarRepository;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -35,7 +36,8 @@ public class CarService {
 		return carDtos;
 	}
 
-	@CircuitBreaker(name = "getCar", fallbackMethod = "getCarFallBack")
+	@Retry(name="getCar", fallbackMethod = "getCarRetry")
+	//@CircuitBreaker(name = "getCar", fallbackMethod = "getCarFallBack")
 	public CarDto getCar(Long id) {
 		Car car = null;
 		CarDto carDto = null;
@@ -50,7 +52,7 @@ public class CarService {
 			System.out.println("Response :"+response);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("Exception : "+e.getMessage()+ "Error Code : "+e.getCause());
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "car.notpresent");
 		}
 		if (ObjectUtils.isEmpty(car) || ObjectUtils.isEmpty(carDto)) {
@@ -98,6 +100,12 @@ public class CarService {
 	public CarDto getCarFallBack(Long id,Exception e){
 		CarDto carDto = new CarDto();
 		carDto.setColor("Accident service was not available to retrieve details");
+		return carDto;
+	}
+
+	public CarDto getCarRetry(Long id,Exception e){
+		CarDto carDto = new CarDto();
+		carDto.setColor("Retrying accident service to retrieve details and failed");
 		return carDto;
 	}
 

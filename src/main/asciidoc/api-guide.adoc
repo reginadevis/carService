@@ -1,0 +1,86 @@
+= Greeting REST Service API Guide
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+= Resources
+
+== Car REST Service
+
+The Car Controller provides the entry point into the service.
+
+=== Accessing the getAllCars GET with provided content
+
+==== Request structure
+
+include::{snippets}/testGetAllCars/http-request.adoc[]
+
+==== Response fields
+
+include::{snippets}/testGetAllCars/http-response.adoc[]
+
+==== Example response
+
+include::{snippets}/testGetAllCars/response-body.adoc[]
+
+==== CURL request
+
+include::{snippets}/testGetAllCars/curl-request.adoc[]
+
+=== Accessing the getAllCars GET with provided content Negative Scenario
+
+==== Request structure
+
+include::{snippets}/testGetAllCarsNegative/http-request.adoc[]
+
+==== Response fields
+
+include::{snippets}/testGetAllCarsNegative/http-response.adoc[]
+
+==== Example response
+
+include::{snippets}/testGetAllCarsNegative/response-body.adoc[]
+
+==== CURL request
+
+include::{snippets}/testGetAllCarsNegative/curl-request.adoc[]
+
+
+=== Accessing the getCars GET with provided content
+
+==== Request structure
+
+include::{snippets}/testGetCar/http-request.adoc[]
+
+==== Response fields
+
+include::{snippets}/testGetCar/http-response.adoc[]
+
+==== Example response
+
+include::{snippets}/testGetCar/response-body.adoc[]
+
+==== CURL request
+
+include::{snippets}/testGetCar/curl-request.adoc[]
+
+=== Accessing the getAllCars GET with provided content Negative Scenario
+
+==== Request structure
+
+include::{snippets}/testGetCarNegative/http-request.adoc[]
+
+==== Response fields
+
+include::{snippets}/testGetCarNegative/http-response.adoc[]
+
+==== Example response
+
+include::{snippets}/testGetCarNegative/response-body.adoc[]
+
+==== CURL request
+
+include::{snippets}/testGetCarNegative/curl-request.adoc[]

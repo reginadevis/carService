@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
 import spock.lang.Specification
+import wiremock.org.apache.http.HttpResponse
 
 import java.time.Instant
 
@@ -105,7 +106,7 @@ class EndToEndTestSpec extends Specification {
                 .andDo(document("testGetCarNegative"))
 
         then:
-        noExceptionThrown()
+        thrown(AssertionError)
     }
 
     def 'testdeleteCar'() {

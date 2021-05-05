@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class CarService {
 
 	@Autowired
@@ -45,14 +46,14 @@ public class CarService {
 			car = carRepository.findById(id).get();
 			carDto = CarMapper.INSTANCE.carToCarDto(car);
 			HttpHeaders headers = new HttpHeaders();
-			headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+			//headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 			HttpEntity <String> entity = new HttpEntity<String>(headers);
 
 			String response = restTemplate.exchange("http://localhost:9090/accident/"+carDto.getVin(), HttpMethod.GET, entity, String.class).getBody();
 			System.out.println("Response :"+response);
 
 		} catch (Exception e) {
-			System.out.println("Exception : "+e.getMessage()+ "Error Code : "+e.getCause());
+			e.printStackTrace();
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "car.notpresent");
 		}
 		if (ObjectUtils.isEmpty(car) || ObjectUtils.isEmpty(carDto)) {

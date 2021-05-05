@@ -4,6 +4,9 @@ import io.github.resilience4j.common.circuitbreaker.configuration.CircuitBreaker
 import io.github.resilience4j.retry.Retry;
 import io.github.resilience4j.retry.RetryConfig;
 import io.github.resilience4j.retry.RetryRegistry;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.binder.jvm.JvmThreadMetrics;
+import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
@@ -21,7 +24,15 @@ import java.time.Duration;
 @Configuration
 public class SwaggerConfig {
 
+    @Bean
+    JvmThreadMetrics threadMetrics() {
+        return new JvmThreadMetrics();
+    }
 
+    @Bean
+    MeterRegistryCustomizer<MeterRegistry> metricsCommonTags() {
+        return registry -> registry.config().commonTags("application", "CAR");
+    }
 
     @Bean
     public Docket api() {

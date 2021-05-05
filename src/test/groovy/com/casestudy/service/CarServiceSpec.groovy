@@ -1,5 +1,6 @@
 package com.casestudy.service
 
+import com.casestudy.AccidentDto
 import com.casestudy.dto.CarDto
 import com.casestudy.dto.ManufacturerDto
 import com.casestudy.dto.ModelDto
@@ -7,19 +8,34 @@ import com.casestudy.entity.Car
 import com.casestudy.entity.Manufacturer
 import com.casestudy.entity.Model
 import com.casestudy.repository.CarRepository
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.github.tomakehurst.wiremock.junit.WireMockRule
+import org.junit.Rule
+import org.springframework.http.HttpHeaders
+import org.springframework.http.MediaType
+import org.springframework.web.client.RestTemplate
 import org.springframework.web.server.ResponseStatusException
 import spock.lang.Specification
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 class CarServiceSpec extends Specification{
 
     CarRepository carRepository = Mock(CarRepository)
-    def carService = new CarService(carRepository)
+    RestTemplate restTemplate = new RestTemplate()
+    def carService = new CarService(carRepository,restTemplate)
+    @Rule
+    public WireMockRule wireMockRule = new WireMockRule(9090);
+
 
     def testgetCar(){
         given:
             def expectedCar = getCarOuptut()
             def mockCar = getMockCar()
             carRepository.findById(4) >> Optional.of(mockCar)
+           stubFor(get(urlEqualTo("/accident/1246"))
+                .willReturn(aResponse().withStatus(200)
+                        .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                        .withBody(getAccident())));
 
         when:
             def actualCar = carService.getCar(4)
@@ -235,5 +251,22 @@ class CarServiceSpec extends Specification{
         cars.add(car)
         cars.add(car1)
         return cars
+    }
+
+    def getAccident(){
+        def accidentDto = new AccidentDto()
+        accidentDto.vin = 11
+        accidentDto.accidentDate = new Date();
+        accidentDto.description ="old desc"
+
+        return asJsonString(accidentDto)
+    }
+
+    static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

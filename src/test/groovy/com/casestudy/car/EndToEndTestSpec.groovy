@@ -334,6 +334,7 @@ class EndToEndTestSpec extends Specification {
 
         return car
     }
+
     static String asJsonString(final Object obj) {
         try {
             return new ObjectMapper().writeValueAsString(obj);

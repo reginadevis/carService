@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>com.casestudy</groupId>
 	<artifactId>car</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<name>car</name>
 	<description>Case study</description>
 	<properties>
